@@ -10,6 +10,9 @@
     <!-- Password Protection Modal -->
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
+            <div class="password-modal-logo">
+                <img src="assets/opr1.jpg" alt="OPR Fargo">
+            </div>
             <h2>Admin Access</h2>
             <p>Please enter the admin password to continue</p>
             <div class="form-group">
@@ -65,6 +68,12 @@
                             <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                         </svg>
                         <span>Slideshow</span>
+                    </div>
+                    <div class="sidebar-item" data-section="events">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+                        </svg>
+                        <span>Events</span>
                     </div>
                     <div class="sidebar-item" data-section="settings">
                         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -176,6 +185,28 @@
                             <input type="url" id="slide3Url" placeholder="images/slide3.jpg">
                         </div>
                         <button class="add-server-btn" onclick="saveSlideshowImages()">Save Slideshow</button>
+                    </div>
+                </div>
+
+                <div class="admin-section" id="events-section" style="display: none;">
+                    <h2>Upcoming Events</h2>
+                    <div class="admin-form">
+                        <div class="form-group">
+                            <label for="eventTitle">Event Title</label>
+                            <input type="text" id="eventTitle" placeholder="e.g., Weekly Tournament">
+                        </div>
+                        <div class="form-group">
+                            <label for="eventDate">Event Date & Time</label>
+                            <input type="datetime-local" id="eventDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="eventDescription">Event Description</label>
+                            <textarea id="eventDescription" rows="3" placeholder="Describe the event..."></textarea>
+                        </div>
+                        <button class="add-server-btn" onclick="addEvent()">Add Event</button>
+                    </div>
+                    <div class="servers-list" id="adminEventsList">
+                        <div class="loading">Loading events...</div>
                     </div>
                 </div>
 

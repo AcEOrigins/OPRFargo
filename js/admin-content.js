@@ -102,6 +102,9 @@ function loadContentIntoForms() {
     if (content.settings) {
         document.getElementById('updateInterval').value = content.settings.updateInterval || 30;
     }
+    
+    // Display events in admin panel
+    displayAdminEvents();
 }
 
 // Save homepage content
@@ -167,6 +170,102 @@ function saveSettings() {
     };
     saveSiteContent(content);
     alert('Settings saved successfully!');
+}
+
+// Events Management
+function loadEvents() {
+    const eventsJson = localStorage.getItem('oprFargoEvents');
+    if (eventsJson) {
+        return JSON.parse(eventsJson);
+    }
+    return [];
+}
+
+function saveEvents(events) {
+    localStorage.setItem('oprFargoEvents', JSON.stringify(events));
+}
+
+function addEvent() {
+    const title = document.getElementById('eventTitle').value.trim();
+    const date = document.getElementById('eventDate').value;
+    const description = document.getElementById('eventDescription').value.trim();
+    
+    if (!title || !date) {
+        alert('Please fill in event title and date');
+        return;
+    }
+    
+    const events = loadEvents();
+    const newEvent = {
+        id: Date.now().toString(),
+        title: title,
+        date: date,
+        description: description
+    };
+    
+    events.push(newEvent);
+    saveEvents(events);
+    
+    // Clear form
+    document.getElementById('eventTitle').value = '';
+    document.getElementById('eventDate').value = '';
+    document.getElementById('eventDescription').value = '';
+    
+    // Refresh display
+    displayAdminEvents();
+    alert('Event added successfully!');
+}
+
+function removeEvent(eventId) {
+    if (!confirm('Are you sure you want to remove this event?')) {
+        return;
+    }
+    
+    const events = loadEvents();
+    const filteredEvents = events.filter(e => e.id !== eventId);
+    saveEvents(filteredEvents);
+    
+    displayAdminEvents();
+}
+
+function displayAdminEvents() {
+    const events = loadEvents();
+    const adminList = document.getElementById('adminEventsList');
+    
+    if (!adminList) return;
+    
+    if (events.length === 0) {
+        adminList.innerHTML = '<div class="empty-state">No events added yet. Add your first event above.</div>';
+        return;
+    }
+    
+    // Sort by date
+    const sortedEvents = [...events].sort((a, b) => {
+        return new Date(a.date) - new Date(b.date);
+    });
+    
+    adminList.innerHTML = sortedEvents.map(event => {
+        const eventDate = new Date(event.date);
+        const dateStr = eventDate.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+        
+        return `
+            <div class="admin-server-item">
+                <div class="admin-server-info">
+                    <strong>${escapeHtml(event.title)}</strong>
+                    <span class="admin-server-id">${dateStr}</span>
+                    ${event.description ? `<span style="display: block; margin-top: 0.25rem; color: var(--text-secondary); font-size: 0.9rem;">${escapeHtml(event.description)}</span>` : ''}
+                </div>
+                <button class="remove-server-btn" onclick="removeEvent('${event.id}')">Remove</button>
+            </div>
+        `;
+    }).join('');
 }
 
 // Initialize on page load

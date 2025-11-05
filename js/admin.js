@@ -1,7 +1,7 @@
 // Admin Panel Functions
 
 // Admin Password - Change this to your desired password
-const ADMIN_PASSWORD = 'admin123'; // Change this to your secure password
+const ADMIN_PASSWORD = 'PQ81377CAS2024!'; // Change this to your secure password
 
 // Check if user is authenticated
 function isAuthenticated() {

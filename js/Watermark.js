@@ -102,6 +102,7 @@ class GreylineStudioWatermark extends HTMLElement {
 
                 @media (max-width: 768px) {
                     :host {
+                        position: fixed;
                         bottom: 15px;
                         left: 15px;
                     }
@@ -119,6 +120,12 @@ class GreylineStudioWatermark extends HTMLElement {
                 }
 
                 @media (max-width: 480px) {
+                    :host {
+                        position: fixed;
+                        bottom: 15px;
+                        left: 15px;
+                    }
+
                     .watermark {
                         padding: 5px 10px;
                         font-size: 10px;
