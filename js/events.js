@@ -1,12 +1,15 @@
 // Events Management Functions
 
-// Load events from localStorage
-function loadEvents() {
-    const eventsJson = localStorage.getItem('oprFargoEvents');
-    if (eventsJson) {
-        return JSON.parse(eventsJson);
+// Load events from database
+async function loadEvents() {
+    try {
+        const response = await fetch('php/api.php?action=get_events');
+        const events = await response.json();
+        return Array.isArray(events) ? events : [];
+    } catch (error) {
+        console.error('Error loading events:', error);
+        return [];
     }
-    return [];
 }
 
 // Save events to localStorage
@@ -55,8 +58,8 @@ function calculateCountdown(dateString) {
 }
 
 // Display events on main page
-function displayEvents() {
-    const events = loadEvents();
+async function displayEvents() {
+    const events = await loadEvents();
     const eventsList = document.getElementById('eventsList');
     
     if (!eventsList) return;
@@ -120,8 +123,8 @@ function displayEvents() {
     
     // Update countdown every minute for active events
     if (sortedEvents.some(e => calculateCountdown(e.date) !== null)) {
-        setTimeout(() => {
-            displayEvents();
+        setTimeout(async () => {
+            await displayEvents();
         }, 60000); // Update every minute
     }
 }
@@ -134,7 +137,7 @@ function escapeHtml(text) {
 }
 
 // Initialize events on page load
-document.addEventListener('DOMContentLoaded', () => {
-    displayEvents();
+document.addEventListener('DOMContentLoaded', async () => {
+    await displayEvents();
 });
 

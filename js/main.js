@@ -5,19 +5,29 @@ const UPDATE_INTERVAL = 30000;
 // State
 let updateIntervals = {};
 
-// Load servers from localStorage (shared with admin.js)
-function loadServers() {
-    const serversJson = localStorage.getItem('oprFargoServers');
-    if (serversJson) {
-        return JSON.parse(serversJson);
+// Load servers from database (shared with admin.js)
+async function loadServers() {
+    try {
+        const response = await fetch('php/api.php?action=get_servers');
+        const servers = await response.json();
+        // Convert database format to frontend format
+        return Array.isArray(servers) ? servers.map(s => ({
+            id: s.battlemetrics_id,
+            name: s.name,
+            displayName: s.display_name || s.name
+        })) : [];
+    } catch (error) {
+        console.error('Error loading servers:', error);
+        return [];
     }
-    return [];
 }
 
 // Initialize all servers
-function initializeServers() {
-    const servers = loadServers();
+async function initializeServers() {
+    const servers = await loadServers();
     const serversGrid = document.getElementById('serversGrid');
+
+    if (!serversGrid) return;
 
     // Clear existing intervals
     Object.values(updateIntervals).forEach(interval => clearInterval(interval));
@@ -354,11 +364,11 @@ function copyIP(serverId) {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initializeServers();
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializeServers();
     // Set up auto-refresh for all servers
-    setInterval(() => {
-        const servers = loadServers();
+    setInterval(async () => {
+        const servers = await loadServers();
         servers.forEach(server => {
             fetchServerData(server.id, server.displayName || server.name);
         });

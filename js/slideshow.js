@@ -4,8 +4,98 @@ const SLIDESHOW_INTERVAL = 5000; // 5 seconds between slides
 let currentSlideIndex = 0;
 let slideshowInterval;
 
+// Load slideshow images from database
+async function loadSlideshowImages() {
+    try {
+        const response = await fetch('php/api.php?action=get_slideshow');
+        const slides = await response.json();
+        
+        if (Array.isArray(slides) && slides.length > 0) {
+            const config = {};
+            slides.forEach(slide => {
+                if (slide.image_data) {
+                    config[`slide${slide.slide_number}`] = slide.image_data;
+                }
+            });
+            return config;
+        }
+    } catch (error) {
+        console.error('Error loading slideshow:', error);
+    }
+    
+    // Default fallback
+    return {
+        slide1: 'assets/opr1.jpg',
+        slide2: 'images/slide2.jpg',
+        slide3: 'images/slide3.jpg'
+    };
+}
+
 // Initialize slideshow
-function initSlideshow() {
+async function initSlideshow() {
+    // Load images from database
+    const slideshowConfig = await loadSlideshowImages();
+    const slideshowWrapper = document.querySelector('.slideshow-wrapper');
+    const slideshowDots = document.querySelector('.slideshow-dots');
+    
+    if (slideshowWrapper) {
+        // Clear existing slides
+        slideshowWrapper.innerHTML = '';
+        if (slideshowDots) {
+            slideshowDots.innerHTML = '';
+        }
+        
+        // Create slides from config
+        const slides = [];
+        const slideKeys = Object.keys(slideshowConfig).sort((a, b) => {
+            const numA = parseInt(a.replace('slide', ''));
+            const numB = parseInt(b.replace('slide', ''));
+            return numA - numB;
+        });
+        
+        slideKeys.forEach((key, index) => {
+            if (slideshowConfig[key]) {
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                if (index === 0) slide.classList.add('active');
+                
+                const img = document.createElement('img');
+                img.src = slideshowConfig[key];
+                img.alt = `Slide ${key.replace('slide', '')}`;
+                slide.appendChild(img);
+                slideshowWrapper.appendChild(slide);
+                slides.push(slide);
+                
+                // Create dot
+                if (slideshowDots) {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot';
+                    if (index === 0) dot.classList.add('active');
+                    dot.onclick = () => currentSlide(index + 1);
+                    slideshowDots.appendChild(dot);
+                }
+            }
+        });
+        
+        // If no slides configured, use default
+        if (slides.length === 0) {
+            const defaultSlide = document.createElement('div');
+            defaultSlide.className = 'slide active';
+            const img = document.createElement('img');
+            img.src = 'assets/opr1.jpg';
+            img.alt = 'OPR Fargo Server';
+            defaultSlide.appendChild(img);
+            slideshowWrapper.appendChild(defaultSlide);
+            
+            if (slideshowDots) {
+                const dot = document.createElement('span');
+                dot.className = 'dot active';
+                dot.onclick = () => currentSlide(1);
+                slideshowDots.appendChild(dot);
+            }
+        }
+    }
+    
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     
@@ -88,7 +178,7 @@ function currentSlide(index) {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initSlideshow();
+document.addEventListener('DOMContentLoaded', async () => {
+    await initSlideshow();
 });
 

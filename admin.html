@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - OPR Fargo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/opr1.jpg">
+    <link rel="apple-touch-icon" href="assets/opr1.jpg">
+    
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -23,6 +28,27 @@
         </div>
     </div>
 
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen" style="display: none;">
+        <div class="loading-logo-container">
+            <div class="loading-logo" id="loadingLogo">
+                <img src="assets/opr1.jpg" alt="OPR Fargo">
+            </div>
+            <svg class="trace-svg" viewBox="0 0 200 200">
+                <!-- Yellow trace (Ukrainian flag yellow) -->
+                <circle class="trace-line trace-yellow" cx="100" cy="100" r="70" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>
+                <!-- Blue trace (Ukrainian flag blue) -->
+                <circle class="trace-line trace-blue" cx="100" cy="100" r="70" fill="none" stroke="#0057B8" stroke-width="4" stroke-linecap="round"/>
+                <!-- White trace (Russian flag white) -->
+                <circle class="trace-line trace-white" cx="100" cy="100" r="70" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+                <!-- Blue trace 2 (Russian flag blue) -->
+                <circle class="trace-line trace-blue2" cx="100" cy="100" r="70" fill="none" stroke="#0039A6" stroke-width="4" stroke-linecap="round"/>
+                <!-- Red trace (Russian flag red) -->
+                <circle class="trace-line trace-red" cx="100" cy="100" r="70" fill="none" stroke="#D52B1E" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
     <div id="adminContent" style="display: none;">
         <nav class="navbar">
             <div class="nav-container">
@@ -31,9 +57,16 @@
                         <h1>OPR Fargo</h1>
                     </a>
                 </div>
-                <a href="index.html" class="admin-toggle">Back to Servers</a>
+                <div class="nav-links">
+                    <a href="index.html" class="admin-toggle">Back to Website</a>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
             </div>
         </nav>
+
+        <div class="section-header-bar" id="mainHeaderBar">
+            <h2 id="headerBarTitle">Server Management</h2>
+        </div>
 
         <div class="admin-layout">
             <!-- Sidebar Navigation -->
@@ -44,24 +77,6 @@
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                         <span>Servers</span>
-                    </div>
-                    <div class="sidebar-item" data-section="homepage">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                        </svg>
-                        <span>Homepage</span>
-                    </div>
-                    <div class="sidebar-item" data-section="footer">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
-                        </svg>
-                        <span>Footer</span>
-                    </div>
-                    <div class="sidebar-item" data-section="social">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-                        </svg>
-                        <span>Social Media</span>
                     </div>
                     <div class="sidebar-item" data-section="slideshow">
                         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -86,9 +101,21 @@
 
             <!-- Main Content Area -->
             <main class="admin-main">
-                <div class="admin-section" id="servers-section">
-                    <h2>Server Management</h2>
-                    <div class="admin-form">
+                <div class="admin-section" id="servers-display-section" style="display: block;">
+                    <div class="servers-grid" id="adminServersList">
+                        <div class="loading">Loading servers...</div>
+                    </div>
+                </div>
+
+                <!-- Add Server Modal -->
+                <div class="add-server-modal" id="addServerModal" style="display: none;">
+                    <div class="add-server-modal-content">
+                        <button class="modal-close-btn" onclick="closeAddServerModal()" aria-label="Close">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                        <h2>Add New Server</h2>
                         <div class="form-group">
                             <label for="serverName">Server Display Name</label>
                             <input type="text" id="serverName" placeholder="e.g., OPR Fargo Main Server">
@@ -99,97 +126,144 @@
                         </div>
                         <button class="add-server-btn" onclick="addServer()">Add Server</button>
                     </div>
-                    <div class="servers-list" id="adminServersList">
-                        <div class="loading">Loading servers...</div>
-                    </div>
                 </div>
 
-                <div class="admin-section" id="homepage-section" style="display: none;">
-                    <h2>Homepage Content</h2>
-                    <div class="admin-form">
-                        <div class="form-group">
-                            <label for="siteTitle">Site Title</label>
-                            <input type="text" id="siteTitle" placeholder="e.g., OPR Fargo">
-                        </div>
-                        <div class="form-group">
-                            <label for="siteDescription">Site Description</label>
-                            <textarea id="siteDescription" rows="3" placeholder="Enter site description"></textarea>
-                        </div>
-                        <button class="add-server-btn" onclick="saveHomepageContent()">Save Homepage</button>
-                    </div>
-                </div>
+                <!-- Floating Add Button (only visible on servers tab) -->
+                <button class="floating-add-btn" id="floatingAddBtn" onclick="openAddServerModal()" aria-label="Add server" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
 
-                <div class="admin-section" id="footer-section" style="display: none;">
-                    <h2>Footer Content</h2>
-                    <div class="admin-form">
-                        <div class="form-group">
-                            <label for="footerDescription">Footer Description</label>
-                            <textarea id="footerDescription" rows="3" placeholder="Enter footer description"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="footerCopyright">Copyright Text</label>
-                            <input type="text" id="footerCopyright" placeholder="e.g., © 2024 OPR Fargo">
-                        </div>
-                        <button class="add-server-btn" onclick="saveFooterContent()">Save Footer</button>
-                    </div>
-                </div>
-
-                <div class="admin-section" id="social-section" style="display: none;">
-                    <h2>Social Media Links</h2>
-                    <div class="admin-form">
-                        <div class="form-group">
-                            <label for="discordLink">Discord Link</label>
-                            <input type="url" id="discordLink" placeholder="https://discord.gg/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="twitterLink">Twitter/X Link</label>
-                            <input type="url" id="twitterLink" placeholder="https://twitter.com/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="facebookLink">Facebook Link</label>
-                            <input type="url" id="facebookLink" placeholder="https://facebook.com/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="instagramLink">Instagram Link</label>
-                            <input type="url" id="instagramLink" placeholder="https://instagram.com/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="youtubeLink">YouTube Link</label>
-                            <input type="url" id="youtubeLink" placeholder="https://youtube.com/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="twitchLink">Twitch Link</label>
-                            <input type="url" id="twitchLink" placeholder="https://twitch.tv/...">
-                        </div>
-                        <div class="form-group">
-                            <label for="redditLink">Reddit Link</label>
-                            <input type="url" id="redditLink" placeholder="https://reddit.com/...">
-                        </div>
-                        <button class="add-server-btn" onclick="saveSocialLinks()">Save Social Links</button>
-                    </div>
-                </div>
+                <!-- Toast Container -->
+                <div class="toast-container" id="toastContainer"></div>
 
                 <div class="admin-section" id="slideshow-section" style="display: none;">
-                    <h2>Slideshow Images</h2>
-                    <div class="admin-form">
-                        <div class="form-group">
-                            <label for="slide1Url">Slide 1 Image URL</label>
-                            <input type="url" id="slide1Url" placeholder="images/slide1.jpg">
+                    <div class="images-grid-container">
+                        <div class="images-grid" id="imagesGrid">
+                            <div class="loading">Loading images...</div>
                         </div>
-                        <div class="form-group">
-                            <label for="slide2Url">Slide 2 Image URL</label>
-                            <input type="url" id="slide2Url" placeholder="images/slide2.jpg">
+                    </div>
+                    
+                    <!-- Hidden file input -->
+                    <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" multiple>
+                </div>
+                
+                <!-- Floating Add Image Button (only visible on slideshow tab) -->
+                <button class="floating-add-image-btn" id="floatingAddImageBtn" onclick="openImageUploadModal()" aria-label="Add image" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
+                
+                <!-- Add Image Upload Modal -->
+                <div class="upload-image-modal" id="uploadImageModal" style="display: none;">
+                    <div class="upload-image-modal-overlay"></div>
+                    <div class="upload-image-modal-content">
+                        <div class="upload-image-modal-header">
+                            <h2>Add Images</h2>
+                            <button class="modal-close-btn" onclick="closeImageUploadModal()" aria-label="Close">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                </svg>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="slide3Url">Slide 3 Image URL</label>
-                            <input type="url" id="slide3Url" placeholder="images/slide3.jpg">
+                        <div class="upload-image-modal-body">
+                            <div class="upload-drop-zone" id="uploadDropZone" onclick="triggerFileInput()">
+                                <div class="upload-drop-zone-content">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 64px; height: 64px; margin-bottom: 1rem;">
+                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                    </svg>
+                                    <p class="upload-drop-text">Drag and drop images here</p>
+                                    <p class="upload-drop-text-secondary">or click to browse</p>
+                                </div>
+                            </div>
+                            <p class="upload-info-text">Supported formats: JPG, PNG, GIF, WebP</p>
                         </div>
-                        <button class="add-server-btn" onclick="saveSlideshowImages()">Save Slideshow</button>
+                    </div>
+                </div>
+                
+                <!-- Context Menu -->
+                <div class="context-menu" id="contextMenu" style="display: none;">
+                    <div class="context-menu-item" onclick="openSetImageModal()">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                        </svg>
+                        <span>Set Image</span>
+                    </div>
+                    <div class="context-menu-item" onclick="renameImage()">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                        <span>Rename</span>
+                    </div>
+                    <div class="context-menu-divider"></div>
+                    <div class="context-menu-item context-menu-item-danger" onclick="deleteImage()">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                        <span>Delete</span>
+                    </div>
+                </div>
+                
+                <!-- Set Image Modal -->
+                <div class="set-image-modal" id="setImageModal" style="display: none;">
+                    <div class="set-image-modal-overlay"></div>
+                    <div class="set-image-modal-content">
+                        <div class="set-image-modal-header">
+                            <h2>Set Slideshow Image</h2>
+                            <button class="modal-close-btn" onclick="closeSetImageModal()" aria-label="Close">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="set-image-modal-body">
+                            <p>Select which slideshow position to use this image:</p>
+                            <div class="slideshow-positions" id="slideshowPositions">
+                                <!-- Dynamically loaded slides -->
+                            </div>
+                            <button class="add-slide-btn" onclick="addNewSlide()" style="margin-top: 1rem;">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem;">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                                Add Slide
+                            </button>
+                            <p class="info-text">This will replace the current image at the selected position.</p>
+                        </div>
+                        <div class="set-image-modal-footer">
+                            <button class="delete-btn-cancel" onclick="closeSetImageModal()">Cancel</button>
+                            <button class="delete-btn-confirm" onclick="confirmSetImage()">Set Image</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rename Image Modal -->
+                <div class="rename-image-modal" id="renameImageModal" style="display: none;">
+                    <div class="rename-image-modal-overlay"></div>
+                    <div class="rename-image-modal-content">
+                        <div class="rename-image-modal-header">
+                            <h2>Rename Image</h2>
+                            <button class="modal-close-btn" onclick="closeRenameModal()" aria-label="Close">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="rename-image-modal-body">
+                            <div class="form-group">
+                                <label for="newImageName">Image Name</label>
+                                <input type="text" id="newImageName" placeholder="Enter image name">
+                            </div>
+                        </div>
+                        <div class="rename-image-modal-footer">
+                            <button class="delete-btn-cancel" onclick="closeRenameModal()">Cancel</button>
+                            <button class="delete-btn-confirm" onclick="confirmRenameImage()">Rename</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="admin-section" id="events-section" style="display: none;">
-                    <h2>Upcoming Events</h2>
                     <div class="admin-form">
                         <div class="form-group">
                             <label for="eventTitle">Event Title</label>
@@ -211,7 +285,6 @@
                 </div>
 
                 <div class="admin-section" id="settings-section" style="display: none;">
-                    <h2>Site Settings</h2>
                     <div class="admin-form">
                         <div class="form-group">
                             <label for="updateInterval">Server Update Interval (seconds)</label>
@@ -224,8 +297,28 @@
         </div>
     </div>
 
+    <!-- Delete Server Confirmation Modal -->
+    <div class="delete-modal" id="deleteModal" style="display: none;">
+        <div class="delete-modal-overlay"></div>
+        <div class="delete-modal-content">
+            <div class="delete-modal-header">
+                <h2>Remove Server</h2>
+            </div>
+            <div class="delete-modal-body">
+                <p>Are you sure you want to remove <strong id="deleteServerName"></strong>?</p>
+                <p class="delete-warning">This action cannot be undone.</p>
+            </div>
+            <div class="delete-modal-footer">
+                <button class="delete-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="delete-btn-confirm" onclick="confirmDelete()">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/admin-content.js"></script>
+    <script src="js/slideshow-admin.js"></script>
 </body>
 </html>
 

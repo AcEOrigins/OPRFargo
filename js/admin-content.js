@@ -1,48 +1,51 @@
 // Content Management Functions
 
-// Load site content from localStorage
-function loadSiteContent() {
-    const contentJson = localStorage.getItem('oprFargoContent');
-    if (contentJson) {
-        return JSON.parse(contentJson);
+// Load site content from database (for compatibility)
+async function loadSiteContent() {
+    try {
+        const settings = await getSettings();
+        return {
+            slideshow: {}, // Slideshow handled separately
+            settings: {
+                updateInterval: parseInt(settings.updateInterval) || 30
+            }
+        };
+    } catch (error) {
+        console.error('Error loading site content:', error);
+        return {
+            slideshow: {},
+            settings: {
+                updateInterval: 30
+            }
+        };
     }
-    return {
-        homepage: {
-            title: 'OPR Fargo',
-            description: 'Arma Reforger Server'
-        },
-        footer: {
-            description: 'Join us for tactical military simulation gameplay',
-            copyright: '© 2024 OPR Fargo. All rights reserved.'
-        },
-        social: {
-            discord: '',
-            twitter: '',
-            facebook: '',
-            instagram: '',
-            youtube: '',
-            twitch: '',
-            reddit: ''
-        },
-        slideshow: {
-            slide1: 'images/slide1.jpg',
-            slide2: 'images/slide2.jpg',
-            slide3: 'images/slide3.jpg'
-        },
-        settings: {
-            updateInterval: 30
-        }
-    };
 }
 
-// Save site content to localStorage
-function saveSiteContent(content) {
-    localStorage.setItem('oprFargoContent', JSON.stringify(content));
+// Save site content to database (for compatibility)
+async function saveSiteContent(content) {
+    try {
+        if (content.settings) {
+            await saveSetting('updateInterval', content.settings.updateInterval || 30);
+        }
+    } catch (error) {
+        console.error('Error saving site content:', error);
+    }
 }
 
 // Sidebar navigation
+// Tab titles mapping
+const tabTitles = {
+    'servers': 'Server Management',
+    'slideshow': 'Slideshow',
+    'events': 'Events',
+    'settings': 'Settings'
+};
+
 function initSidebar() {
     const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const floatingAddBtn = document.getElementById('floatingAddBtn');
+    const headerBarTitle = document.getElementById('headerBarTitle');
+    
     sidebarItems.forEach(item => {
         item.addEventListener('click', () => {
             // Remove active class from all items
@@ -54,95 +57,102 @@ function initSidebar() {
             const sections = document.querySelectorAll('.admin-section');
             sections.forEach(section => section.style.display = 'none');
             
+            // Hide servers display section
+            const serversDisplaySection = document.getElementById('servers-display-section');
+            
+            if (serversDisplaySection) {
+                serversDisplaySection.style.display = 'none';
+            }
+            
             // Show selected section
             const sectionName = item.getAttribute('data-section');
             const section = document.getElementById(`${sectionName}-section`);
             if (section) {
                 section.style.display = 'block';
             }
+            
+            // Update header bar title
+            if (headerBarTitle && tabTitles[sectionName]) {
+                headerBarTitle.textContent = tabTitles[sectionName];
+            }
+            
+            // Show/hide floating add button and servers display section (only for servers tab)
+            const floatingAddImageBtn = document.getElementById('floatingAddImageBtn');
+            if (floatingAddBtn) {
+                if (sectionName === 'servers') {
+                    floatingAddBtn.style.display = 'flex';
+                    // Show servers display section
+                    if (serversDisplaySection) {
+                        serversDisplaySection.style.display = 'block';
+                    }
+                } else {
+                    floatingAddBtn.style.display = 'none';
+                }
+            }
+            
+            // Show/hide floating add image button (only for slideshow tab)
+            if (floatingAddImageBtn) {
+                if (sectionName === 'slideshow') {
+                    floatingAddImageBtn.style.display = 'flex';
+                    // Load and display images when slideshow tab is opened
+                    if (typeof displayImages === 'function') {
+                        displayImages();
+                    }
+                } else {
+                    floatingAddImageBtn.style.display = 'none';
+                }
+            }
         });
     });
+    
+    // Show add button and servers sections on initial load if servers section is active
+    const activeItem = document.querySelector('.sidebar-item.active');
+    if (activeItem) {
+        const sectionName = activeItem.getAttribute('data-section');
+        
+        // Update header bar title on initial load
+        if (headerBarTitle && tabTitles[sectionName]) {
+            headerBarTitle.textContent = tabTitles[sectionName];
+        }
+        
+        if (sectionName === 'servers') {
+            if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
+            const serversDisplaySection = document.getElementById('servers-display-section');
+            if (serversDisplaySection) serversDisplaySection.style.display = 'block';
+        } else {
+            if (floatingAddBtn) floatingAddBtn.style.display = 'none';
+        }
+        
+        // Show/hide floating add image button on initial load
+        const floatingAddImageBtn = document.getElementById('floatingAddImageBtn');
+        if (floatingAddImageBtn) {
+            if (sectionName === 'slideshow') {
+                floatingAddImageBtn.style.display = 'flex';
+                // Load and display images when slideshow tab is opened
+                if (typeof displayImages === 'function') {
+                    displayImages();
+                }
+            } else {
+                floatingAddImageBtn.style.display = 'none';
+            }
+        }
+    }
 }
 
 // Load content into forms
-function loadContentIntoForms() {
-    const content = loadSiteContent();
-    
-    // Homepage
-    if (content.homepage) {
-        document.getElementById('siteTitle').value = content.homepage.title || '';
-        document.getElementById('siteDescription').value = content.homepage.description || '';
-    }
-    
-    // Footer
-    if (content.footer) {
-        document.getElementById('footerDescription').value = content.footer.description || '';
-        document.getElementById('footerCopyright').value = content.footer.copyright || '';
-    }
-    
-    // Social Media
-    if (content.social) {
-        document.getElementById('discordLink').value = content.social.discord || '';
-        document.getElementById('twitterLink').value = content.social.twitter || '';
-        document.getElementById('facebookLink').value = content.social.facebook || '';
-        document.getElementById('instagramLink').value = content.social.instagram || '';
-        document.getElementById('youtubeLink').value = content.social.youtube || '';
-        document.getElementById('twitchLink').value = content.social.twitch || '';
-        document.getElementById('redditLink').value = content.social.reddit || '';
-    }
-    
-    // Slideshow
-    if (content.slideshow) {
-        document.getElementById('slide1Url').value = content.slideshow.slide1 || '';
-        document.getElementById('slide2Url').value = content.slideshow.slide2 || '';
-        document.getElementById('slide3Url').value = content.slideshow.slide3 || '';
-    }
+async function loadContentIntoForms() {
+    const content = await loadSiteContent();
     
     // Settings
     if (content.settings) {
-        document.getElementById('updateInterval').value = content.settings.updateInterval || 30;
+        const updateIntervalEl = document.getElementById('updateInterval');
+        if (updateIntervalEl) {
+            updateIntervalEl.value = content.settings.updateInterval || 30;
+        }
     }
     
     // Display events in admin panel
-    displayAdminEvents();
-}
-
-// Save homepage content
-function saveHomepageContent() {
-    const content = loadSiteContent();
-    content.homepage = {
-        title: document.getElementById('siteTitle').value.trim(),
-        description: document.getElementById('siteDescription').value.trim()
-    };
-    saveSiteContent(content);
-    alert('Homepage content saved successfully!');
-}
-
-// Save footer content
-function saveFooterContent() {
-    const content = loadSiteContent();
-    content.footer = {
-        description: document.getElementById('footerDescription').value.trim(),
-        copyright: document.getElementById('footerCopyright').value.trim()
-    };
-    saveSiteContent(content);
-    alert('Footer content saved successfully!');
-}
-
-// Save social media links
-function saveSocialLinks() {
-    const content = loadSiteContent();
-    content.social = {
-        discord: document.getElementById('discordLink').value.trim(),
-        twitter: document.getElementById('twitterLink').value.trim(),
-        facebook: document.getElementById('facebookLink').value.trim(),
-        instagram: document.getElementById('instagramLink').value.trim(),
-        youtube: document.getElementById('youtubeLink').value.trim(),
-        twitch: document.getElementById('twitchLink').value.trim(),
-        reddit: document.getElementById('redditLink').value.trim()
-    };
-    saveSiteContent(content);
-    alert('Social media links saved successfully!');
+    await displayAdminEvents();
 }
 
 // Save slideshow images
@@ -158,34 +168,34 @@ function saveSlideshowImages() {
 }
 
 // Save settings
-function saveSettings() {
-    const content = loadSiteContent();
+async function saveSettings() {
     const interval = parseInt(document.getElementById('updateInterval').value);
     if (isNaN(interval) || interval < 10 || interval > 300) {
         alert('Update interval must be between 10 and 300 seconds');
         return;
     }
-    content.settings = {
-        updateInterval: interval
-    };
-    saveSiteContent(content);
-    alert('Settings saved successfully!');
+    
+    try {
+        await saveSetting('updateInterval', interval);
+        alert('Settings saved successfully!');
+    } catch (error) {
+        console.error('Error saving settings:', error);
+        alert('Error saving settings. Please try again.');
+    }
 }
 
 // Events Management
-function loadEvents() {
-    const eventsJson = localStorage.getItem('oprFargoEvents');
-    if (eventsJson) {
-        return JSON.parse(eventsJson);
+async function loadEvents() {
+    try {
+        const events = await getEvents();
+        return Array.isArray(events) ? events : [];
+    } catch (error) {
+        console.error('Error loading events:', error);
+        return [];
     }
-    return [];
 }
 
-function saveEvents(events) {
-    localStorage.setItem('oprFargoEvents', JSON.stringify(events));
-}
-
-function addEvent() {
+async function addEvent() {
     const title = document.getElementById('eventTitle').value.trim();
     const date = document.getElementById('eventDate').value;
     const description = document.getElementById('eventDescription').value.trim();
@@ -195,41 +205,53 @@ function addEvent() {
         return;
     }
     
-    const events = loadEvents();
-    const newEvent = {
-        id: Date.now().toString(),
-        title: title,
-        date: date,
-        description: description
-    };
-    
-    events.push(newEvent);
-    saveEvents(events);
-    
-    // Clear form
-    document.getElementById('eventTitle').value = '';
-    document.getElementById('eventDate').value = '';
-    document.getElementById('eventDescription').value = '';
-    
-    // Refresh display
-    displayAdminEvents();
-    alert('Event added successfully!');
+    try {
+        // Use the API function from api.js
+        const response = await fetch('php/api.php?action=add_event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: title,
+                date: date,
+                description: description || ''
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            // Clear form
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventDescription').value = '';
+            
+            // Refresh display
+            await displayAdminEvents();
+            alert('Event added successfully!');
+        } else {
+            alert('Error adding event: ' + (result.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error adding event:', error);
+        alert('Error adding event. Please try again.');
+    }
 }
 
-function removeEvent(eventId) {
+async function removeEvent(eventId) {
     if (!confirm('Are you sure you want to remove this event?')) {
         return;
     }
     
-    const events = loadEvents();
-    const filteredEvents = events.filter(e => e.id !== eventId);
-    saveEvents(filteredEvents);
-    
-    displayAdminEvents();
+    try {
+        await deleteEvent(eventId);
+        await displayAdminEvents();
+    } catch (error) {
+        console.error('Error removing event:', error);
+        alert('Error removing event. Please try again.');
+    }
 }
 
-function displayAdminEvents() {
-    const events = loadEvents();
+async function displayAdminEvents() {
+    const events = await loadEvents();
     const adminList = document.getElementById('adminEventsList');
     
     if (!adminList) return;
