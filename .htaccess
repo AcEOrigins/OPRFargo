@@ -13,6 +13,28 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [R=301,L]
+
+    # Map /home to index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^home/?$ index.html [L]
+
+    # Map scrambled admin path to admin.html
+    # Scrambled path: k9m2p4q7w1x5z6v8n3c2h4j9b8f7d5s3a1g6t4y8u2i9o3p7l4k6j2h8g5f3d1s9a7
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^k9m2p4q7w1x5z6v8n3c2h4j9b8f7d5s3a1g6t4y8u2i9o3p7l4k6j2h8g5f3d1s9a7/?$ admin.html [L]
+
+    # Root URL maps to home
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^$ /home [R=301,L]
+
+    # Block direct access to HTML files (must come after rewrites)
+    RewriteCond %{THE_REQUEST} \s/+([^?\s]*\.html) [NC]
+    RewriteCond %{REQUEST_URI} !^/home
+    RewriteCond %{REQUEST_URI} !^/k9m2p4q7w1x5z6v8n3c2h4j9b8f7d5s3a1g6t4y8u2i9o3p7l4k6j2h8g5f3d1s9a7
+    RewriteRule ^ - [F,L]
 </IfModule>
 
 # Security Headers
@@ -48,9 +70,9 @@
 </IfModule>
 
 # Error Pages
-ErrorDocument 404 /index.html
-ErrorDocument 403 /index.html
-ErrorDocument 500 /index.html
+ErrorDocument 404 /home
+ErrorDocument 403 /home
+ErrorDocument 500 /home
 
 # Prevent access to sensitive files
 <FilesMatch "^(\.htaccess|\.git|config\.php|database_structure\.sql)$">
@@ -58,12 +80,8 @@ ErrorDocument 500 /index.html
     Deny from all
 </FilesMatch>
 
-# Block access to any file with "admin" in the filename (except your actual admin file)
-# This prevents access to common admin page names like admin.html, administrator.html, etc.
-<FilesMatch "admin.*\.html$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# Admin file is password-protected, so we don't need to block it here
+# If you want to use a different filename for security, you can add a blocking rule here
 
 # Protect config.php
 <Files "config.php">
