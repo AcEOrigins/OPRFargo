@@ -46,6 +46,7 @@ function createServerCard(server) {
     card.className = 'server-card';
     card.id = cardId;
     card.innerHTML = `
+        <div class="server-status-line" id="statusLine-${server.id}"></div>
         <div class="server-card-header">
             <h2 class="server-card-title">${escapeHtml(server.displayName || server.name)}</h2>
             <div class="status-indicator" id="status-${server.id}">
@@ -54,15 +55,17 @@ function createServerCard(server) {
             </div>
         </div>
         <div class="server-card-content">
-            <div class="server-info-grid">
-                <div class="info-card">
+            <div class="players-pair">
+                <div class="info-card square-card">
                     <div class="info-label">Players</div>
                     <div class="info-value" id="players-${server.id}">-</div>
                 </div>
-                <div class="info-card">
+                <div class="info-card square-card">
                     <div class="info-label">Max Players</div>
                     <div class="info-value" id="maxPlayers-${server.id}">-</div>
                 </div>
+            </div>
+            <div class="server-info-grid">
                 <div class="info-card">
                     <div class="info-label">Map</div>
                     <div class="info-value" id="map-${server.id}">-</div>
@@ -71,19 +74,11 @@ function createServerCard(server) {
                     <div class="info-label">Game Mode</div>
                     <div class="info-value" id="gameMode-${server.id}">-</div>
                 </div>
-                <div class="info-card">
+            </div>
+            <div class="uptime-card-container">
+                <div class="info-card uptime-card">
                     <div class="info-label">Uptime</div>
                     <div class="info-value" id="uptime-${server.id}">-</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Server IP</div>
-                    <div class="info-value" id="ip-${server.id}">-</div>
-                </div>
-            </div>
-            <div class="server-players-section">
-                <h3>Players Online</h3>
-                <div class="players-list" id="playersList-${server.id}">
-                    <div class="loading">Loading players...</div>
                 </div>
             </div>
             <div class="server-connect-section">
@@ -129,6 +124,18 @@ function updateServerDisplay(data, serverId, displayName) {
     const statusDot = statusIndicator.querySelector('.status-dot');
     const statusText = statusIndicator.querySelector('.status-text');
     
+    // Update status line
+    const statusLine = document.getElementById(`statusLine-${serverId}`);
+    if (statusLine) {
+        if (attributes.status === 'online') {
+            statusLine.classList.add('online');
+            statusLine.classList.remove('offline');
+        } else {
+            statusLine.classList.add('offline');
+            statusLine.classList.remove('online');
+        }
+    }
+    
     if (attributes.status === 'online') {
         statusDot.classList.add('online');
         statusDot.classList.remove('offline');
@@ -173,7 +180,6 @@ function updateServerDisplay(data, serverId, displayName) {
     const ip = attributes.ip || 'N/A';
     const port = attributes.port || 'N/A';
     const ipPort = `${ip}:${port}`;
-    if (ipEl) ipEl.textContent = ipPort;
     if (ipAddressEl) ipAddressEl.textContent = ipPort;
     
     // Fetch and display players
