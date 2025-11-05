@@ -1,5 +1,5 @@
 // API Helper Functions
-const API_URL = 'php/api.php';
+const API_URL = '/php/api.php';
 
 // Generic API call function
 async function apiCall(action, method = 'GET', data = null) {

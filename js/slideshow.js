@@ -7,7 +7,7 @@ let slideshowInterval;
 // Load slideshow images from database
 async function loadSlideshowImages() {
     try {
-        const response = await fetch('php/api.php?action=get_slideshow');
+        const response = await fetch('/php/api.php?action=get_slideshow');
         const slides = await response.json();
         
         if (Array.isArray(slides) && slides.length > 0) {

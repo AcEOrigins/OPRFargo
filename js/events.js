@@ -3,7 +3,7 @@
 // Load events from database
 async function loadEvents() {
     try {
-        const response = await fetch('php/api.php?action=get_events');
+        const response = await fetch('/php/api.php?action=get_events');
         const events = await response.json();
         return Array.isArray(events) ? events : [];
     } catch (error) {

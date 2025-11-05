@@ -207,7 +207,7 @@ async function addEvent() {
     
     try {
         // Use the API function from api.js
-        const response = await fetch('php/api.php?action=add_event', {
+        const response = await fetch('/php/api.php?action=add_event', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

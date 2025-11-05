@@ -8,7 +8,7 @@ let updateIntervals = {};
 // Load servers from database (shared with admin.js)
 async function loadServers() {
     try {
-        const response = await fetch('php/api.php?action=get_servers');
+        const response = await fetch('/php/api.php?action=get_servers');
         const servers = await response.json();
         // Convert database format to frontend format
         return Array.isArray(servers) ? servers.map(s => ({
