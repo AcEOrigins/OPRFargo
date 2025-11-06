@@ -141,23 +141,34 @@ function initSidebar() {
 
 // Load content into forms
 async function loadContentIntoForms() {
-    // Wait a bit to ensure DOM is ready
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    const content = await loadSiteContent();
-    
-    // Settings
-    if (content.settings) {
-        const updateIntervalEl = document.getElementById('updateInterval');
-        if (updateIntervalEl) {
-            updateIntervalEl.value = content.settings.updateInterval || 30;
-        } else {
-            console.warn('updateInterval element not found in DOM');
+    try {
+        // Wait a bit to ensure DOM is ready and admin content is visible
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Check if admin content is visible
+        const adminContent = document.getElementById('adminContent');
+        if (!adminContent || adminContent.style.display === 'none') {
+            console.warn('Admin content not visible yet, skipping form load');
+            return;
         }
+        
+        const content = await loadSiteContent();
+        
+        // Settings
+        if (content && content.settings) {
+            const updateIntervalEl = document.getElementById('updateInterval');
+            if (updateIntervalEl) {
+                updateIntervalEl.value = content.settings.updateInterval || 30;
+            } else {
+                console.warn('updateInterval element not found in DOM');
+            }
+        }
+        
+        // Display events in admin panel
+        await displayAdminEvents();
+    } catch (error) {
+        console.error('Error in loadContentIntoForms:', error);
     }
-    
-    // Display events in admin panel
-    await displayAdminEvents();
 }
 
 // Save slideshow images (deprecated - now using database)
