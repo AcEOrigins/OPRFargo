@@ -4,8 +4,7 @@ let selectedImageId = null;
 let uploadedImages = [];
 let slideshowSlides = [];
 
-// API Base URL
-const API_URL = '/php/api.php';
+// API_URL is defined in api.js
 
 // Load uploaded images from database
 async function loadUploadedImages() {
