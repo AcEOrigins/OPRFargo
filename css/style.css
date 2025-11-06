@@ -197,28 +197,6 @@ body {
     gap: 1rem;
 }
 
-.admin-toggle {
-    background: var(--accent);
-    color: var(--text-primary);
-    border: none;
-    padding: 0.5rem 1.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background 0.2s, transform 0.1s;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.admin-toggle:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-}
-
-.admin-toggle:active {
-    transform: translateY(0);
-}
 
 .logout-btn {
     background: var(--error);
@@ -1019,53 +997,11 @@ body {
     margin-top: 1rem;
 }
 
-/* Password Modal */
-.password-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
-.password-modal-content {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 2.5rem;
-    padding-top: 4rem;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-}
-
+/* Password Modal - Enhanced styles (fallback in admin-fallback.css) */
 .password-modal-logo {
-    position: absolute;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
     border: 4px solid var(--accent);
     box-shadow: 0 0 20px rgba(74, 144, 226, 0.6), 0 0 40px rgba(74, 144, 226, 0.4);
     animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 10;
-}
-
-.password-modal-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
 }
 
 @keyframes popIn {
@@ -1082,42 +1018,28 @@ body {
     }
 }
 
+.password-modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+}
+
 .password-modal-content h2 {
-    margin-bottom: 1rem;
     color: var(--accent);
-    font-size: 1.8rem;
-    margin-top: 0.5rem;
 }
 
 .password-modal-content p {
-    margin-bottom: 1.5rem;
     color: var(--text-secondary);
 }
 
-.password-modal-content .form-group {
-    margin-bottom: 1.5rem;
-}
-
 .password-modal-content input {
-    width: 100%;
-    padding: 0.75rem;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
-    border-radius: 6px;
     color: var(--text-primary);
-    font-size: 1rem;
-    text-align: center;
     transition: border-color 0.2s;
 }
 
 .password-modal-content input:focus {
-    outline: none;
     border-color: var(--accent);
-}
-
-.password-modal-content .add-server-btn {
-    width: 100%;
-    margin-top: 1rem;
 }
 
 /* Password Modal Collapse Animation */
@@ -1382,316 +1304,6 @@ body {
 }
 
 /* Admin Layout */
-.admin-layout {
-    display: flex;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-}
-
-/* Admin Sidebar */
-.admin-sidebar {
-    position: fixed;
-    left: 0;
-    top: 70px;
-    height: calc(100vh - 70px);
-    width: 70px;
-    background: var(--bg-card);
-    border-right: 1px solid var(--border);
-    transition: width 0.3s ease;
-    z-index: 999;
-    overflow: hidden;
-}
-
-.admin-sidebar:hover {
-    width: 250px;
-}
-
-.sidebar-content {
-    padding: 1rem 0;
-}
-
-.sidebar-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s;
-    gap: 1rem;
-    white-space: nowrap;
-}
-
-.sidebar-item:hover {
-    background: var(--bg-secondary);
-    color: var(--accent);
-}
-
-.sidebar-item.active {
-    background: var(--bg-secondary);
-    color: var(--accent);
-    border-left: 3px solid var(--accent);
-}
-
-.sidebar-item svg {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-}
-
-.sidebar-item span {
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-weight: 500;
-}
-
-.admin-sidebar:hover .sidebar-item span {
-    opacity: 1;
-}
-
-/* Admin Main Content */
-.admin-main {
-    flex: 1;
-    margin-left: 70px;
-    padding: 0;
-    background: var(--bg-primary);
-    min-height: calc(100vh - 70px);
-    display: flex;
-    flex-direction: column;
-}
-
-.admin-main-content {
-    padding: 2rem;
-}
-
-.admin-section {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 2rem;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-#slideshow-section {
-    display: flex;
-    flex-direction: column;
-    max-width: none;
-    width: 100%;
-    margin: 0;
-    height: calc(100vh - 130px);
-    max-height: calc(100vh - 130px);
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    position: relative;
-    background: var(--bg-primary);
-}
-
-.section-header-bar {
-    background: var(--bg-secondary);
-    border-bottom: 2px solid var(--accent);
-    padding: 1rem 2rem;
-    margin: 0;
-    margin-left: 70px;
-    width: calc(100% - 70px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 998;
-}
-
-.section-header-bar h2 {
-    margin: 0;
-    color: var(--accent);
-    font-size: 1.8rem;
-    font-weight: 600;
-    text-align: center;
-}
-
-.admin-section h2 {
-    margin-bottom: 1.5rem;
-    color: var(--accent);
-    font-size: 2rem;
-}
-
-#servers-display-section {
-    margin-top: 0;
-    padding: 2rem;
-    width: 100%;
-    background: var(--bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    margin: 2rem;
-    max-width: calc(100% - 4rem);
-    overflow: visible;
-}
-
-/* Admin Page */
-.admin-page-content {
-    max-width: 800px;
-    margin: 0 auto;
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 2rem;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-#servers-display-section .servers-grid {
-    overflow: visible;
-}
-
-.admin-page-content h2 {
-    margin-bottom: 1.5rem;
-    color: var(--accent);
-    font-size: 2rem;
-}
-
-.admin-form {
-    margin-bottom: 2rem;
-}
-
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-primary);
-    font-size: 1rem;
-    transition: border-color 0.2s;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.add-server-btn {
-    background: var(--accent);
-    color: var(--text-primary);
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background 0.2s;
-    width: 100%;
-}
-
-.add-server-btn:hover {
-    background: var(--accent-hover);
-}
-
-.servers-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.admin-server-card {
-    position: relative;
-    overflow: visible !important;
-}
-
-.admin-server-card .server-card {
-    overflow: visible;
-}
-
-.admin-remove-x {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--error);
-    border: 2px solid var(--bg-card);
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    z-index: 1000;
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.admin-remove-x:hover {
-    background: #d32f2f;
-    transform: scale(1.1);
-}
-
-.admin-remove-x:active {
-    transform: scale(0.95);
-}
-
-.admin-remove-x svg {
-    width: 16px;
-    height: 16px;
-}
-
-.admin-server-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-.admin-server-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.admin-server-info strong {
-    color: var(--text-primary);
-}
-
-.admin-server-id {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.remove-server-btn {
-    background: var(--error);
-    color: var(--text-primary);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-}
-
-.remove-server-btn:hover {
-    background: #d32f2f;
-}
 
 .container {
     max-width: 1200px;
@@ -2903,62 +2515,6 @@ footer {
         height: 24px;
     }
 
-    /* Admin Panel */
-    .admin-sidebar {
-        top: 55px;
-        height: calc(100vh - 55px);
-    }
-
-    .admin-main {
-        margin-left: 55px;
-        padding: 0.75rem;
-        width: calc(100% - 55px);
-    }
-
-    .admin-main {
-        padding: 0;
-    }
-
-    .admin-section {
-        padding: 1rem;
-    }
-
-    #slideshow-section {
-        height: calc(100vh - 140px);
-        max-height: calc(100vh - 140px);
-    }
-
-    .images-grid-container {
-        padding: 0.75rem;
-    }
-
-    .section-header-bar {
-        padding: 0.625rem 0.75rem;
-        margin-left: 55px;
-        width: calc(100% - 55px);
-    }
-
-    .section-header-bar h2 {
-        font-size: 1.3rem;
-    }
-
-    .admin-section h2 {
-        font-size: 1.3rem;
-    }
-
-    #servers-display-section {
-        padding: 0.75rem;
-        margin: 0.75rem;
-        max-width: calc(100% - 1.5rem);
-    }
-
-    .form-group {
-        margin-bottom: 1.25rem;
-    }
-
-    .add-server-btn {
-        width: 100%;
-    }
 }
 
 /* Very Small Devices */
