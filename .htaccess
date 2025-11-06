@@ -13,9 +13,8 @@
     # Map /home to index.html
     RewriteRule ^home/?$ index.html [L]
 
-    # Map scrambled admin path to admin.html
-    # Scrambled path: k9m2p4q7w1x5z6v8n3c2h4j9b8f7d5s3a1g6t4y8u2i9o3p7l4k6j2h8g5f3d1s9a7
-    RewriteRule ^k9m2p4q7w1x5z6v8n3c2h4j9b8f7d5s3a1g6t4y8u2i9o3p7l4k6j2h8g5f3d1s9a7/?$ admin.html [L]
+    # Map /admin to admin.html
+    RewriteRule ^admin/?$ admin.html [L]
 
     # Root URL maps to home
     RewriteRule ^$ /home [R=301,L]
