@@ -353,3 +353,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Ensure admin UI elements (header, floating add buttons, server section) are visible
+// This is a non-invasive initializer to run after DOM/content loads and after auth flows.
+function ensureAdminUI(){
+    try{
+        const adminContent = document.getElementById('adminContent');
+        const mainHeaderBar = document.getElementById('mainHeaderBar');
+        const floatingAddBtn = document.getElementById('floatingAddBtn');
+        const floatingAddImageBtn = document.getElementById('floatingAddImageBtn');
+        const serversDisplaySection = document.getElementById('servers-display-section');
+
+        if(!adminContent) return;
+
+        // If adminContent is shown, ensure header is visible
+        if (adminContent.style.display !== 'none'){
+            if (mainHeaderBar) mainHeaderBar.style.display = 'block';
+
+            // Determine active section
+            const activeItem = document.querySelector('.sidebar-item.active') || document.querySelector('.sidebar-item[data-section="servers"]');
+            const sectionName = activeItem ? activeItem.getAttribute('data-section') : 'servers';
+
+            // Toggle servers display and floating add button
+            if (sectionName === 'servers'){
+                if (serversDisplaySection) serversDisplaySection.style.display = 'block';
+                if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
+            } else {
+                if (floatingAddBtn) floatingAddBtn.style.display = 'none';
+            }
+
+            // Toggle slideshow add image button
+            if (sectionName === 'slideshow'){
+                if (floatingAddImageBtn) floatingAddImageBtn.style.display = 'flex';
+            } else {
+                if (floatingAddImageBtn) floatingAddImageBtn.style.display = 'none';
+            }
+        }
+    }catch(e){
+        console.warn('ensureAdminUI error', e);
+    }
+}
+
+// Run ensureAdminUI at key points to make sure UI becomes visible when scripts/auth finish
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(ensureAdminUI, 50);
+    setTimeout(ensureAdminUI, 500);
+});
+
+// Also call from other modules if needed (admin.js will call loadContentIntoForms and displayAdminServers)
+window.ensureAdminUI = ensureAdminUI;
+
