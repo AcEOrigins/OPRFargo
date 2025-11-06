@@ -1,0 +1,17 @@
+{
+    "name": "oprfargo/website",
+    "description": "OPR Fargo Arma Reforger Server Website",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "OPRFargo\\": "php/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
+
