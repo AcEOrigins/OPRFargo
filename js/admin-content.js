@@ -141,6 +141,9 @@ function initSidebar() {
 
 // Load content into forms
 async function loadContentIntoForms() {
+    // Wait a bit to ensure DOM is ready
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     const content = await loadSiteContent();
     
     // Settings
@@ -148,6 +151,8 @@ async function loadContentIntoForms() {
         const updateIntervalEl = document.getElementById('updateInterval');
         if (updateIntervalEl) {
             updateIntervalEl.value = content.settings.updateInterval || 30;
+        } else {
+            console.warn('updateInterval element not found in DOM');
         }
     }
     
@@ -155,21 +160,20 @@ async function loadContentIntoForms() {
     await displayAdminEvents();
 }
 
-// Save slideshow images
+// Save slideshow images (deprecated - now using database)
 function saveSlideshowImages() {
-    const content = loadSiteContent();
-    content.slideshow = {
-        slide1: document.getElementById('slide1Url').value.trim(),
-        slide2: document.getElementById('slide2Url').value.trim(),
-        slide3: document.getElementById('slide3Url').value.trim()
-    };
-    saveSiteContent(content);
-    alert('Slideshow images saved successfully!');
+    // This function is deprecated - slideshow is now managed via database
+    console.log('saveSlideshowImages is deprecated - use slideshow admin instead');
 }
 
 // Save settings
 async function saveSettings() {
-    const interval = parseInt(document.getElementById('updateInterval').value);
+    const updateIntervalEl = document.getElementById('updateInterval');
+    if (!updateIntervalEl) {
+        console.error('updateInterval element not found');
+        return;
+    }
+    const interval = parseInt(updateIntervalEl.value);
     if (isNaN(interval) || interval < 10 || interval > 300) {
         alert('Update interval must be between 10 and 300 seconds');
         return;
@@ -196,9 +200,18 @@ async function loadEvents() {
 }
 
 async function addEvent() {
-    const title = document.getElementById('eventTitle').value.trim();
-    const date = document.getElementById('eventDate').value;
-    const description = document.getElementById('eventDescription').value.trim();
+    const titleEl = document.getElementById('eventTitle');
+    const dateEl = document.getElementById('eventDate');
+    const descriptionEl = document.getElementById('eventDescription');
+    
+    if (!titleEl || !dateEl) {
+        console.error('Event form elements not found');
+        return;
+    }
+    
+    const title = titleEl.value.trim();
+    const date = dateEl.value;
+    const description = descriptionEl ? descriptionEl.value.trim() : '';
     
     if (!title || !date) {
         alert('Please fill in event title and date');
@@ -220,9 +233,9 @@ async function addEvent() {
         
         if (result.success) {
             // Clear form
-            document.getElementById('eventTitle').value = '';
-            document.getElementById('eventDate').value = '';
-            document.getElementById('eventDescription').value = '';
+            if (titleEl) titleEl.value = '';
+            if (dateEl) dateEl.value = '';
+            if (descriptionEl) descriptionEl.value = '';
             
             // Refresh display
             await displayAdminEvents();
