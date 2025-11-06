@@ -1,10 +1,28 @@
+/* CSS Variables */
+:root {
+    --bg-primary: #0a0e27;
+    --bg-secondary: #141b2d;
+    --bg-card: #1a2332;
+    --accent: #4a90e2;
+    --accent-hover: #5ba0f2;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b8c4;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --error: #f44336;
+    --border: #2a3441;
+}
+
 /* Critical fallback styles for password modal */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0e27;
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
     margin: 0;
     padding: 0;
+    padding-top: 70px;
+    min-height: 100vh;
+    line-height: 1.6;
 }
 
 .password-modal {
@@ -102,6 +120,64 @@ body {
     color: #f44336;
     font-size: 0.9rem;
     margin-top: 0.5rem;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-brand h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent) 0%, #6ab7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    color: var(--accent);
+    background: var(--bg-secondary);
 }
 
 /* Servers Grid */
@@ -485,6 +561,46 @@ body {
 
 /* Mobile Responsive - Admin Panel */
 @media (max-width: 768px) {
+    body {
+        padding-top: 60px;
+        font-size: 14px;
+    }
+
+    /* Navbar */
+    .navbar {
+        height: 60px;
+    }
+
+    .nav-container {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nav-brand {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .nav-brand h1 {
+        font-size: 1.4rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .nav-menu {
+        flex-shrink: 0;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
     .admin-layout {
         margin-top: 60px;
         flex-direction: column;
@@ -647,6 +763,29 @@ body {
 
 /* Small Mobile Devices */
 @media (max-width: 480px) {
+    body {
+        padding-top: 55px;
+        font-size: 13px;
+    }
+
+    /* Navbar */
+    .navbar {
+        height: 55px;
+    }
+
+    .nav-container {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .nav-brand h1 {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
     .admin-sidebar {
         top: 55px;
         height: calc(100vh - 55px);
