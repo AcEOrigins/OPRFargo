@@ -43,11 +43,17 @@ function checkPassword() {
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
                 loadingScreen.classList.remove('rotating');
-                document.getElementById('adminContent').style.display = 'block';
-                // Initialize admin panel after authentication
-                displayAdminServers();
-                if (typeof initSidebar === 'function') initSidebar();
-                if (typeof loadContentIntoForms === 'function') loadContentIntoForms();
+                const adminContent = document.getElementById('adminContent');
+                if (adminContent) {
+                    adminContent.style.display = 'block';
+                    // Small delay to ensure DOM is ready
+                    setTimeout(() => {
+                        // Initialize admin panel after authentication
+                        if (typeof displayAdminServers === 'function') displayAdminServers();
+                        if (typeof initSidebar === 'function') initSidebar();
+                        if (typeof loadContentIntoForms === 'function') loadContentIntoForms();
+                    }, 100);
+                }
             }, 5000);
         }, 500);
     } else {
@@ -81,11 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if already authenticated
     if (isAuthenticated()) {
-        document.getElementById('passwordModal').style.display = 'none';
-        document.getElementById('adminContent').style.display = 'block';
-        displayAdminServers();
-        if (typeof initSidebar === 'function') initSidebar();
-        if (typeof loadContentIntoForms === 'function') loadContentIntoForms();
+        const passwordModal = document.getElementById('passwordModal');
+        const adminContent = document.getElementById('adminContent');
+        if (passwordModal) passwordModal.style.display = 'none';
+        if (adminContent) {
+            adminContent.style.display = 'block';
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                if (typeof displayAdminServers === 'function') displayAdminServers();
+                if (typeof initSidebar === 'function') initSidebar();
+                if (typeof loadContentIntoForms === 'function') loadContentIntoForms();
+            }, 100);
+        }
     } else {
         // Focus password input
         setTimeout(() => {

@@ -45,6 +45,12 @@ function initSidebar() {
     const sidebarItems = document.querySelectorAll('.sidebar-item');
     const floatingAddBtn = document.getElementById('floatingAddBtn');
     const headerBarTitle = document.getElementById('headerBarTitle');
+    const mainHeaderBar = document.getElementById('mainHeaderBar');
+    
+    // Ensure header bar is visible
+    if (mainHeaderBar) {
+        mainHeaderBar.style.display = 'block';
+    }
     
     sidebarItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -74,6 +80,11 @@ function initSidebar() {
             // Update header bar title
             if (headerBarTitle && tabTitles[sectionName]) {
                 headerBarTitle.textContent = tabTitles[sectionName];
+            }
+            
+            // Ensure header bar is visible
+            if (mainHeaderBar) {
+                mainHeaderBar.style.display = 'block';
             }
             
             // Show/hide floating add button and servers display section (only for servers tab)
@@ -115,6 +126,11 @@ function initSidebar() {
             headerBarTitle.textContent = tabTitles[sectionName];
         }
         
+        // Ensure header bar is visible on initial load
+        if (mainHeaderBar) {
+            mainHeaderBar.style.display = 'block';
+        }
+        
         if (sectionName === 'servers') {
             if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
             const serversDisplaySection = document.getElementById('servers-display-section');
@@ -135,6 +151,21 @@ function initSidebar() {
             } else {
                 floatingAddImageBtn.style.display = 'none';
             }
+        }
+    } else {
+        // If no active item, default to servers section
+        const serversItem = document.querySelector('.sidebar-item[data-section="servers"]');
+        if (serversItem) {
+            serversItem.classList.add('active');
+            if (headerBarTitle && tabTitles['servers']) {
+                headerBarTitle.textContent = tabTitles['servers'];
+            }
+            if (mainHeaderBar) {
+                mainHeaderBar.style.display = 'block';
+            }
+            if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
+            const serversDisplaySection = document.getElementById('servers-display-section');
+            if (serversDisplaySection) serversDisplaySection.style.display = 'block';
         }
     }
 }

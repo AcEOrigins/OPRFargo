@@ -447,6 +447,12 @@ body {
     transform: translateY(0);
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .logout-btn {
     background: #f44336;
     color: white;
@@ -571,6 +577,11 @@ body {
 
     .password-modal-content {
         padding-top: 3.5rem;
+    }
+
+    .nav-links {
+        gap: 0.5rem;
+        flex-wrap: wrap;
     }
 
     .admin-toggle {
