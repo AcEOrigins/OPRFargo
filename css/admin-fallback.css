@@ -114,8 +114,8 @@ body {
 /* Admin Layout */
 .admin-layout {
     display: flex;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
+    margin-top: 140px;
+    min-height: calc(100vh - 140px);
 }
 
 /* Admin Sidebar */
@@ -225,11 +225,20 @@ body {
     border-bottom: 2px solid #4a90e2;
     padding: 1rem 2rem;
     margin: 0;
-    margin-left: 70px;
+    position: fixed;
+    top: 70px;
+    left: 70px;
+    right: 0;
     width: calc(100% - 70px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 998;
+    z-index: 999;
+    display: block;
+}
+
+/* Ensure header bar is visible when adminContent is shown */
+#adminContent[style*="block"] .section-header-bar,
+#adminContent .section-header-bar {
+    display: block !important;
 }
 
 .section-header-bar h2 {
@@ -519,13 +528,38 @@ body {
     }
 
     .section-header-bar {
+        top: 60px;
+        left: 60px;
         padding: 0.75rem 1rem;
-        margin-left: 60px;
         width: calc(100% - 60px);
     }
 
     .section-header-bar h2 {
         font-size: 1.5rem;
+    }
+
+    .floating-add-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 30px;
+        right: 15px;
+    }
+
+    .floating-add-image-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 30px;
+        right: 15px;
+    }
+
+    .floating-add-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .floating-add-image-btn svg {
+        width: 24px;
+        height: 24px;
     }
 
     .admin-section h2 {
@@ -638,13 +672,38 @@ body {
     }
 
     .section-header-bar {
+        top: 55px;
+        left: 55px;
         padding: 0.625rem 0.75rem;
-        margin-left: 55px;
         width: calc(100% - 55px);
     }
 
     .section-header-bar h2 {
         font-size: 1.3rem;
+    }
+
+    .floating-add-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 30px;
+        right: 15px;
+    }
+
+    .floating-add-image-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 30px;
+        right: 15px;
+    }
+
+    .floating-add-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .floating-add-image-btn svg {
+        width: 24px;
+        height: 24px;
     }
 
     .admin-section h2 {
@@ -678,13 +737,14 @@ body {
     color: #ffffff;
     border: none;
     cursor: pointer;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
     z-index: 1000;
 }
+
 
 .floating-add-btn:hover {
     transform: scale(1.1);
